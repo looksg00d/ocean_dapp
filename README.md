@@ -1,5 +1,6 @@
 
 npm install @ethersproject/providers @ethersproject/contracts @ethersproject/units
+npm install @usedapp/core @chakra-ui/react --legacy-peer-deps
 
 # Getting Started with Create React App
 
