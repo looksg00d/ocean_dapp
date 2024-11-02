@@ -1,3 +1,6 @@
+
+npm install @ethersproject/providers @ethersproject/contracts @ethersproject/units
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

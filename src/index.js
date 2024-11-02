@@ -1,17 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import ReactDOM from 'react-dom/client'; // Импортируйте из 'react-dom/client'
+import App from './App'; // Импортируйте ваш компонент App
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+// Создайте корень с помощью createRoot
+const root = ReactDOM.createRoot(document.getElementById('root')); // Убедитесь, что у вас есть элемент с id 'root' в вашем index.html
+
+// Используйте метод render на корне
 root.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
