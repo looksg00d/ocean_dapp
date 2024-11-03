@@ -1,8 +1,9 @@
-# King of the Hill DApp 👑
+# King of the Hill DApp 
+![Screenshot 2024-11-03 231452](https://github.com/user-attachments/assets/052b7a2e-e25f-49fc-9581-133cd045c6f4)
 
-A decentralized application (DApp) game running on Oasis Sapphire Testnet where players compete to become the king by placing higher bids. Features real-time updates, on-chain messaging, and nickname system.
+A decentralized application (DApp) game running on Oasis Sapphire Testnet where players compete to become the king by placing higher bids. Features real-time updates, on-chain messaging, and nickname system. Smart contracts in this repository https://github.com/looksg00d/smartcontracts_oasis
 
-## 🎮 Game Mechanics
+## Game Mechanics
 
 - Bid higher than the current king to claim the throne
 - Stay king longer to earn more rewards
@@ -10,7 +11,7 @@ A decentralized application (DApp) game running on Oasis Sapphire Testnet where 
 - Real-time leaderboard tracks longest-reigning kings
 - On-chain messaging system for player interaction
 
-## 🛠 Tech Stack
+## Tech Stack
 
 - **Frontend:** React.js
 - **Smart Contracts:** Solidity
@@ -18,13 +19,13 @@ A decentralized application (DApp) game running on Oasis Sapphire Testnet where 
 - **Web3 Integration:** ethers.js
 - **Token Standard:** ERC20 (OCEAN Token)
 
-## 🔧 Smart Contracts
+## Smart Contracts
 
 - **Main Game Contract:** `0x255A17D141C19689fc5b2001E82DD9cBd99e8197`
 - **OCEAN Token:** `0x973e69303259B0c2543a38665122b773D28405fB`
 - **Nicknames Contract:** `0xd622248e7a4849082f1909665F421998c1b4d355`
 
-## 🚀 Features
+## Features
 
 - **Wallet Integration:** MetaMask support
 - **Real-time Updates:** Auto-refresh every 10 seconds
@@ -33,17 +34,17 @@ A decentralized application (DApp) game running on Oasis Sapphire Testnet where 
 - **Nickname System:** Custom player names
 - **Token Integration:** OCEAN token for bidding
 
-## 💻 Local Development
+## Local Development
 
 Clone the repo:
-git clone https://github.com/looksg00d/ocean_dapp.git
-cd ocean_dapp
+`git clone https://github.com/looksg00d/ocean_dapp.git`
+`cd ocean_dapp`
 
 Install dependencies:
-npm install
+`npm install`
 
 Start local development server:
-npm start
+`npm start`
 
 
 ## How to Play
@@ -66,10 +67,6 @@ npm start
 ## Contributing
 
 Pull requests are welcome! For major changes, please open an issue first
-
-## 📄 License
-
-MIT License - see LICENSE file for details
 
 ## Acknowledgments
 
