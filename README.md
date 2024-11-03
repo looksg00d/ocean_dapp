@@ -1,4 +1,5 @@
 # King of the Hill DApp 
+![Screenshot 2024-11-03 231452](https://github.com/user-attachments/assets/052b7a2e-e25f-49fc-9581-133cd045c6f4)
 
 A decentralized application (DApp) game running on Oasis Sapphire Testnet where players compete to become the king by placing higher bids. Features real-time updates, on-chain messaging, and nickname system. Smart contracts in this repository https://github.com/looksg00d/smartcontracts_oasis
 
