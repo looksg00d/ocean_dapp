@@ -1,3 +1,16 @@
+# Ocean DApp 🌊
+
+A decentralized application for interacting with Ocean Protocol.
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js (version 14 or higher)
+- npm or yarn
+- MetaMask or other Web3 wallet
+
+### Installation
 
 npm install @ethersproject/providers @ethersproject/contracts @ethersproject/units
 npm install @usedapp/core @chakra-ui/react --legacy-peer-deps

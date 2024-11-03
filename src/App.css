@@ -299,3 +299,324 @@ body {
 }
 
 /* Добавим обработку клика вне дропдауна */
+
+.ascii-terminal {
+  font-family: var(--main-font);
+  margin: 0;
+  color: var(--terminal-green);
+  font-size: 20px;
+}
+
+.ascii-progress::after {
+  content: "";
+  animation: terminalProgress 2s steps(12) infinite;
+}
+
+@keyframes terminalProgress {
+  0% { content: "[░░░░░░░░░░]"; }
+  8.33% { content: "[█░░░░░░░░░]"; }
+  16.66% { content: "[██░░░░░░░░]"; }
+  25% { content: "[███░░░░░░░]"; }
+  33.33% { content: "[████░░░░░░]"; }
+  41.66% { content: "[█████░░░░░]"; }
+  50% { content: "[██████░░░░]"; }
+  58.33% { content: "[███████░░░]"; }
+  66.66% { content: "[████████░░]"; }
+  75% { content: "[█████████░]"; }
+  83.33% { content: "[██████████]"; }
+  91.66% { content: "[█████████░]"; }
+  100% { content: "[████████░░]"; }
+}
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+}
+
+.loading-state h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--main-font);
+  color: var(--terminal-green);
+  margin: 0;
+  font-size: 24px;
+}
+
+.ascii-loader {
+  display: inline-block;
+  font-family: monospace;
+  animation: asciiSpin 1s steps(4) infinite;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  opacity: 0.7;
+}
+
+@keyframes asciiSpin {
+  0% { content: "[|]"; }
+  25% { content: "[/]"; }
+  50% { content: "[-]"; }
+  75% { content: "[\\]"; }
+}
+
+.ascii-loader::after {
+  content: "";
+  animation: matrixLoad 1s steps(8) infinite;
+}
+
+@keyframes matrixLoad {
+  0% { content: "▒▒▒▒▒"; }
+  12.5% { content: "█▒▒▒▒"; }
+  25% { content: "██▒▒▒"; }
+  37.5% { content: "███▒▒"; }
+  50% { content: "████▒"; }
+  62.5% { content: "█████"; }
+  75% { content: "█████"; }
+  87.5% { content: "████▒"; }
+  100% { content: "███▒▒"; }
+}
+
+.loading-state h2 {
+  animation: terminalBlink 0.5s step-end infinite alternate;
+}
+
+@keyframes terminalBlink {
+  50% { opacity: 0.7; }
+}
+
+.loading-state::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 255, 0, 0.05) 50%,
+    transparent 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  animation: scanline 10s linear infinite;
+}
+
+@keyframes scanline {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(100%); }
+}
+
+.leaderboard-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.leaderboard-toggle {
+  background: none;
+  border: 1px solid var(--terminal-green);
+  color: var(--terminal-green);
+  padding: 8px 16px;
+  font-family: var(--main-font);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.leaderboard-toggle:hover {
+  background-color: var(--terminal-green);
+  color: var(--terminal-black);
+}
+
+.leaderboard {
+  margin-top: 15px;
+  border: 1px solid var(--terminal-green);
+  padding: 15px;
+  background-color: rgba(0, 255, 0, 0.05);
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.leaderboard h3 {
+  margin: 0 0 15px 0;
+  font-size: 20px;
+}
+
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  border: 1px solid var(--terminal-green);
+  gap: 10px;
+}
+
+.rank {
+  font-weight: bold;
+  min-width: 30px;
+}
+
+.address {
+  font-family: monospace;
+  overflow-wrap: break-word;
+  flex: 1;
+  text-align: left;
+}
+
+.time {
+  color: var(--terminal-green);
+  opacity: 0.8;
+  font-size: 0.9em;
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+/* Стили для основной информации о короле */
+.king-info {
+  text-align: center;
+}
+
+/* Отдельные стили для информации в лидерборде */
+.leaderboard-item .king-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+  gap: 10px;
+}
+
+/* Стили для адреса */
+.leaderboard-item .address {
+  font-family: monospace;
+  font-size: 0.9em;
+  text-align: left;
+  flex: 1;
+  min-width: 0;
+  padding-right: 10px;
+}
+
+/* Стили для времени */
+.leaderboard-item .time {
+  color: var(--terminal-green);
+  opacity: 0.8;
+  font-size: 0.9em;
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+.messages-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.messages-toggle {
+  background: none;
+  border: 1px solid var(--terminal-green);
+  color: var(--terminal-green);
+  padding: 8px 16px;
+  font-family: var(--main-font);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.messages-toggle:hover {
+  background-color: var(--terminal-green);
+  color: var(--terminal-black);
+}
+
+.messages-board {
+  margin-top: 15px;
+  border: 1px solid var(--terminal-green);
+  padding: 15px;
+  background-color: rgba(0, 255, 0, 0.05);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.message-input-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.message-input {
+  flex: 1;
+  padding: 8px;
+  background-color: var(--terminal-black);
+  border: 1px solid var(--terminal-green);
+  color: var(--terminal-green);
+  font-family: var(--main-font);
+}
+
+.send-message-button {
+  background: none;
+  border: 1px solid var(--terminal-green);
+  color: var(--terminal-green);
+  padding: 8px 16px;
+  cursor: pointer;
+  font-family: var(--main-font);
+  transition: all 0.3s;
+}
+
+.send-message-button:hover {
+  background-color: var(--terminal-green);
+  color: var(--terminal-black);
+}
+
+.messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.message-item {
+  display: flex;
+  gap: 10px;
+  padding: 8px;
+  border: 1px solid var(--terminal-green);
+  text-align: left;
+}
+
+.message-sender {
+  color: var(--terminal-green);
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
+.message-content {
+  word-break: break-word;
+}
+
+.network-warning {
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 1px solid var(--terminal-green);
+  padding: 15px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.network-switch-button {
+  background: none;
+  border: 1px solid var(--terminal-green);
+  color: var(--terminal-green);
+  padding: 8px 16px;
+  margin-top: 10px;
+  font-family: var(--main-font);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.network-switch-button:hover {
+  background-color: var(--terminal-green);
+  color: var(--terminal-black);
+}
