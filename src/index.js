@@ -1,12 +1,14 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client'; // Импортируйте из 'react-dom/client'
-import App from './App'; // Импортируйте ваш компонент App
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
 
-// Создайте корень с помощью createRoot
-const root = ReactDOM.createRoot(document.getElementById('root')); // Убедитесь, что у вас есть элемент с id 'root' в вашем index.html
+// Init root element
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
-// Используйте метод render на корне
+// Fire up the app
 root.render(
+  // Strict mode for extra checks during dev
   <React.StrictMode>
     <App />
   </React.StrictMode>

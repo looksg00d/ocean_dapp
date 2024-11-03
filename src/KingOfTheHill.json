@@ -5,10 +5,34 @@
         "internalType": "address",
         "name": "_oceanTokenAddress",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_nicknamesAddress",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "CommissionWithdrawn",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -69,45 +93,6 @@
   },
   {
     "inputs": [],
-    "name": "commission",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "currentKing",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "currentPrize",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "distributeRewards",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -128,12 +113,37 @@
   },
   {
     "inputs": [],
+    "name": "getAllMessages",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "sender",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "content",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct KingOfTheHill.Message[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "getKingInfo",
     "outputs": [
       {
-        "internalType": "address",
-        "name": "king",
-        "type": "address"
+        "internalType": "string",
+        "name": "kingNickname",
+        "type": "string"
       },
       {
         "internalType": "uint256",
@@ -175,43 +185,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "kings",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "addr",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "timeOnThrone",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "lastClaimTime",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "lastDistributionTime",
     "outputs": [
@@ -225,24 +198,13 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "messages",
+    "inputs": [],
+    "name": "nicknamesContract",
     "outputs": [
       {
-        "internalType": "address",
-        "name": "sender",
+        "internalType": "contract Nicknames",
+        "name": "",
         "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "content",
-        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -254,6 +216,19 @@
     "outputs": [
       {
         "internalType": "contract IERC20Template",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
@@ -276,15 +251,9 @@
   },
   {
     "inputs": [],
-    "name": "totalPrizePool",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
+    "name": "withdrawCommission",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

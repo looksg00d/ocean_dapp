@@ -4,30 +4,32 @@ import { Contract } from '@ethersproject/contracts';
 import { parseUnits, formatUnits } from '@ethersproject/units';
 import IERC20Template from './IERC20Template.json'; // ERC20 token ABI spec
 import KingOfTheHillABI from './KingOfTheHill.json'; // Main contract ABI
+import NicknamesABI from './Nicknames.json'; // Add Nicknames ABI import
 import './App.css';
 
-// Contract addresses on testnet
-const OCEAN_TOKEN_ADDRESS = '0x1B083D8584dd3e6Ff37d04a6e7e82b5F622f3985';
-const KING_CONTRACT_ADDRESS = '0x845e301402Ba655b51bd308363fa1dD0741B56dd';
+// Contract addresses for Sapphire Testnet
+const OCEAN_TOKEN_ADDRESS = '0x973e69303259B0c2543a38665122b773D28405fB'; // Update with new addr
+const KING_CONTRACT_ADDRESS = '0x255A17D141C19689fc5b2001E82DD9cBd99e8197'; // Update with new addr
+const NICKNAMES_CONTRACT_ADDRESS = '0xd622248e7a4849082f1909665F421998c1b4d355'; // New contract addr
+
+// Sapphire Testnet config
+const SAPPHIRE_CHAIN_ID = '0x5aff'; // 23295 in hex (correct value)
+const SAPPHIRE_PARAMS = {
+  chainId: SAPPHIRE_CHAIN_ID,
+  chainName: 'Oasis Sapphire Testnet',
+  nativeCurrency: {
+    name: 'TEST',
+    symbol: 'TEST',
+    decimals: 18
+  },
+  rpcUrls: ['https://testnet.sapphire.oasis.io'], // Updated URL
+  blockExplorerUrls: ['https://testnet.explorer.sapphire.oasis.dev']
+};
 
 // Add RPC URL at the top with other constants
 const RPC_URL = "https://sepolia.infura.io/v3/YOUR_INFURA_KEY"; // Replace with your Infura key
 // or use public RPC
 // const RPC_URL = "https://rpc2.sepolia.org";
-
-// Добавим константы для Sepolia
-const SEPOLIA_CHAIN_ID = '0xaa36a7'; // Chain ID в hex формате
-const SEPOLIA_PARAMS = {
-  chainId: SEPOLIA_CHAIN_ID,
-  chainName: 'Sepolia',
-  nativeCurrency: {
-    name: 'Sepolia ETH',
-    symbol: 'SEP',
-    decimals: 18
-  },
-  rpcUrls: ['https://rpc2.sepolia.org'],
-  blockExplorerUrls: ['https://sepolia.etherscan.io']
-};
 
 function App() {
   // State hooks setup
@@ -50,11 +52,14 @@ function App() {
   const [showMessages, setShowMessages] = useState(false);
   const [isLoadingTopKings, setIsLoadingTopKings] = useState(false);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
+  const [nickname, setNickname] = useState('');
+  const [userNickname, setUserNickname] = useState('');
+  const [showNicknameModal, setShowNicknameModal] = useState(false);
 
   // Hook up wallet connection
   const connectWallet = async () => {
     try {
-      // Сначала проверяем и переключаем сеть
+      // First, check and switch network
       const networkOk = await checkAndSwitchNetwork();
       if (!networkOk) return;
 
@@ -149,7 +154,7 @@ function App() {
       const provider = new Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       
-      // Сначала проверим allowance
+      // First, check allowance
       const oceanTokenContract = new Contract(OCEAN_TOKEN_ADDRESS, IERC20Template, signer);
       const allowance = await oceanTokenContract.allowance(account, KING_CONTRACT_ADDRESS);
       const bidAmount = parseUnits(amount, 18);
@@ -167,7 +172,7 @@ function App() {
       fetchKingInfo();
     } catch (error) {
       console.error('Error:', error);
-      // Проверяем текст ошибки для определения причины
+      // Check error message to determine the reason
       if (error.message.includes('bid not high enough') || 
           error.message.includes('insufficient bid') ||
           error.message.toLowerCase().includes('higher than current')) {
@@ -295,47 +300,26 @@ function App() {
       
       const kingContract = new Contract(KING_CONTRACT_ADDRESS, KingOfTheHillABI, provider);
       
-      // Получаем события
-      const filter = kingContract.filters.NewKing();
-      const events = await kingContract.queryFilter(filter);
-      console.log('King events:', events);
+      // Use getTopKings instead of event listeners
+      const topKingsData = await kingContract.getTopKings();
+      console.log('Raw top kings data:', topKingsData);
       
-      // Создаем Map для хранения уникальных адресов и их времени
-      const kingsMap = new Map();
+      // Get nicknames for all addresses
+      const kingsWithNicknames = await Promise.all(
+        topKingsData.map(async (king) => {
+          const nickname = await getNickname(king.addr);
+          return {
+            address: king.addr,
+            nickname: nickname || king.addr,
+            timeOnThrone: Number(king.timeOnThrone)
+          };
+        })
+      );
       
-      // Обрабатываем события и суммируем время для каждого уникального адреса
-      for(const event of events) {
-        const kingAddress = event.args.king;
-        
-        try {
-          // Получаем актуальные данные из массива kings
-          for(let i = 0; i < 10; i++) {
-            const kingData = await kingContract.kings(i);
-            if(kingData.addr.toLowerCase() === kingAddress.toLowerCase()) {
-              const currentTime = Number(kingData.timeOnThrone);
-              
-              if(kingsMap.has(kingAddress)) {
-                // Если адрес уже есть, обновляем время
-                const existingTime = kingsMap.get(kingAddress);
-                kingsMap.set(kingAddress, existingTime + currentTime);
-              } else {
-                // Если адреса еще нет, добавляем новую запись
-                kingsMap.set(kingAddress, currentTime);
-              }
-              break;
-            }
-          }
-        } catch(e) {
-          console.log('Reached end of kings array');
-          break;
-        }
-      }
-      
-      // Преобразуем Map в массив и сортируем по времени
-      const formattedKings = Array.from(kingsMap, ([address, timeOnThrone]) => ({
-        address,
-        timeOnThrone
-      })).sort((a, b) => b.timeOnThrone - a.timeOnThrone);
+      // Sort by time on throne (though they should already be sorted)
+      const formattedKings = kingsWithNicknames
+        .filter(king => king.address !== "0x0000000000000000000000000000000000000000")
+        .sort((a, b) => b.timeOnThrone - a.timeOnThrone);
       
       console.log('Formatted kings:', formattedKings);
       setTopKings(formattedKings);
@@ -347,35 +331,38 @@ function App() {
     }
   };
 
-  // Функция для получения сообщений
+  // Fetch messages from the chain
   const fetchMessages = async () => {
     try {
       setIsLoadingMessages(true);
-      console.log('Fetching messages...');
       
+      // Init provider based on wallet availability
       const provider = window.ethereum 
         ? new Web3Provider(window.ethereum)
         : new JsonRpcProvider(RPC_URL);
       
       const kingContract = new Contract(KING_CONTRACT_ADDRESS, KingOfTheHillABI, provider);
       
-      // Получаем все события NewMessage
-      const filter = kingContract.filters.NewMessage();
-      const events = await kingContract.queryFilter(filter);
-      console.log('Message events:', events);
+      // Grab all msgs directly from the contract
+      const allMessages = await kingContract.getAllMessages();
+      console.log('Raw messages from contract:', allMessages);
       
-      // Преобразуем события в сообщения
-      const fetchedMessages = events.map(event => ({
-        sender: event.args.sender,
-        content: event.args.content,
-        // Можно добавить timestamp, если он есть в событии
-        timestamp: event.blockTimestamp || new Date().getTime()
-      }));
+      // Process the msg data
+      const fetchedMessages = await Promise.all(
+        allMessages.map(async (msg) => {
+          const nickname = await getNickname(msg.sender);
+          return {
+            id: Math.random().toString(), // tmp id for React key prop
+            sender: nickname || msg.sender,
+            content: msg.content
+          };
+        })
+      );
       
-      console.log('All fetched messages:', fetchedMessages);
+      // Flip array to show newest msgs first
+      const sortedMessages = [...fetchedMessages].reverse();
+      console.log('Processed messages:', sortedMessages);
       
-      // Сортируем сообщения по времени (новые сверху)
-      const sortedMessages = fetchedMessages.sort((a, b) => b.timestamp - a.timestamp);
       setMessages(sortedMessages);
       
     } catch (error) {
@@ -385,7 +372,16 @@ function App() {
     }
   };
 
-  // Фнкция отправки сообщения
+  // Auto-refresh messages
+  useEffect(() => {
+    if (showMessages) {
+      fetchMessages();
+      const interval = setInterval(fetchMessages, 10000); // Refresh every 10 secs
+      return () => clearInterval(interval);
+    }
+  }, [showMessages]);
+
+  // Send msg to the chain
   const sendMessage = async () => {
     if (!newMessage.trim()) {
       setMessage('ENTER MESSAGE');
@@ -397,51 +393,23 @@ function App() {
       const signer = provider.getSigner();
       const kingContract = new Contract(KING_CONTRACT_ADDRESS, KingOfTheHillABI, signer);
       
+      setMessage('SENDING MESSAGE...');
       const tx = await kingContract.sendMessage(newMessage);
       await tx.wait();
       
       setNewMessage('');
-      fetchMessages(); // Обновляем писок сообщенй
       setMessage('MESSAGE SENT');
+      
+      // Refresh messages list immediately after sending
+      await fetchMessages();
+      
     } catch (error) {
       console.error('Error sending message:', error);
       setMessage('FAILED TO SEND MESSAGE');
     }
   };
 
-  // Добавьте этот useEffect для автоматического обновления сообщений
-  useEffect(() => {
-    if (showMessages) {
-      // Первоначальная загрузка
-      fetchMessages();
-      
-      // Подписываемся на новые события
-      const provider = window.ethereum 
-        ? new Web3Provider(window.ethereum)
-        : new JsonRpcProvider(RPC_URL);
-      
-      const kingContract = new Contract(KING_CONTRACT_ADDRESS, KingOfTheHillABI, provider);
-      
-      // Слушаем новые сообщения
-      const handleNewMessage = (sender, content) => {
-        console.log('New message received:', { sender, content });
-        setMessages(prev => [{
-          sender,
-          content,
-          timestamp: new Date().getTime()
-        }, ...prev]);
-      };
-      
-      kingContract.on('NewMessage', handleNewMessage);
-      
-      // Очищаем подписку при размонтировании
-      return () => {
-        kingContract.off('NewMessage', handleNewMessage);
-      };
-    }
-  }, [showMessages]);
-
-  // Функция для проверки и переключения сети
+  // Check and switch network if needed
   const checkAndSwitchNetwork = async () => {
     try {
       if (!window.ethereum) {
@@ -451,31 +419,16 @@ function App() {
 
       const chainId = await window.ethereum.request({ method: 'eth_chainId' });
       
-      if (chainId !== SEPOLIA_CHAIN_ID) {
+      if (chainId !== SAPPHIRE_CHAIN_ID) {
         try {
-          // Пробуем переключиться на Sepolia
           await window.ethereum.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: SEPOLIA_CHAIN_ID }],
+            method: 'wallet_addEthereumChain',
+            params: [SAPPHIRE_PARAMS],
           });
           return true;
-        } catch (switchError) {
-          // Если сеть не добавлена (код 4902), пробуем добавить её
-          if (switchError.code === 4902) {
-            try {
-              await window.ethereum.request({
-                method: 'wallet_addEthereumChain',
-                params: [SEPOLIA_PARAMS],
-              });
-              return true;
-            } catch (addError) {
-              console.error('Error adding Sepolia:', addError);
-              setMessage('FAILED TO ADD SEPOLIA');
-              return false;
-            }
-          }
-          console.error('Error switching to Sepolia:', switchError);
-          setMessage('FAILED TO SWITCH NETWORK');
+        } catch (error) {
+          console.error('Error adding Sapphire network:', error);
+          setMessage('FAILED TO ADD SAPPHIRE');
           return false;
         }
       }
@@ -487,14 +440,87 @@ function App() {
     }
   };
 
-  // Добавим обработчик изменения сети
+  // Handle chain switching
   const handleChainChanged = async (chainId) => {
-    if (chainId !== SEPOLIA_CHAIN_ID) {
-      setMessage('PLEASE SWITCH TO SEPOLIA');
+    if (chainId !== SAPPHIRE_CHAIN_ID) {
+      setMessage('PLEASE SWITCH TO SAPPHIRE');
       setIsConnected(false);
       window.location.reload();
     }
   };
+
+  // Grab nickname for an address
+  const getNickname = async (address) => {
+    try {
+      const provider = window.ethereum 
+        ? new Web3Provider(window.ethereum)
+        : new JsonRpcProvider(RPC_URL);
+      
+      const nicknamesContract = new Contract(
+        NICKNAMES_CONTRACT_ADDRESS,
+        NicknamesABI,
+        provider
+      );
+      
+      const nickname = await nicknamesContract.getNickname(address);
+      // Return full nickname or address
+      return nickname || address;
+    } catch (error) {
+      console.error('Error fetching nickname:', error);
+      return address;
+    }
+  };
+
+  // Set user's nickname
+  const setUserNicknameHandler = async () => {
+    if (!nickname.trim()) {
+      setMessage('ENTER NICKNAME');
+      return;
+    }
+
+    try {
+      const provider = new Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const nicknamesContract = new Contract(
+        NICKNAMES_CONTRACT_ADDRESS,
+        NicknamesABI,
+        signer
+      );
+      
+      setMessage('SETTING NICKNAME...');
+      const tx = await nicknamesContract.setNickname(nickname);
+      await tx.wait();
+      
+      setUserNickname(nickname);
+      setShowNicknameModal(false);
+      setMessage('NICKNAME SET');
+    } catch (error) {
+      console.error('Error setting nickname:', error);
+      setMessage('FAILED TO SET NICKNAME');
+    }
+  };
+
+  // Check nickname when wallet connects
+  useEffect(() => {
+    const checkNickname = async () => {
+      if (isConnected && account) {
+        const nick = await getNickname(account);
+        setUserNickname(nick);
+      }
+    };
+    checkNickname();
+  }, [isConnected, account]);
+
+  // Update king's display name with nickname
+  useEffect(() => {
+    const updateKingNickname = async () => {
+      if (currentKing && currentKing !== "0x0000000000000000000000000000000000000000") {
+        const kingNick = await getNickname(currentKing);
+        setCurrentKing(kingNick);
+      }
+    };
+    updateKingNickname();
+  }, [currentKing]);
 
   // UI render
   return (
@@ -528,13 +554,17 @@ function App() {
                   className="account-address" 
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 >
-                  {account.slice(0, 6)}...{account.slice(-4)}
+                  {/* Always show shortened address */}
+                  {account ? `${account.slice(0, 6)}...${account.slice(-4)}` : ''}
                   <span className="dropdown-arrow">▼</span>
                 </div>
                 {isDropdownOpen && (
                   <div className="dropdown-menu">
+                    <button onClick={() => setShowNicknameModal(true)}>
+                      {'>'} SET NICKNAME
+                    </button>
                     <button onClick={disconnectWallet}>
-                    {'>'} DISCONNECT
+                      {'>'} DISCONNECT
                     </button>
                   </div>
                 )}
@@ -573,22 +603,19 @@ function App() {
                 <div className="loading-message">{'>'} LOADING TOP KINGS...</div>
               ) : topKings && topKings.length > 0 ? (
                 <div className="leaderboard-list">
-                  {topKings.map((king, index) => {
-                    console.log(`Rendering king ${index}:`, king);
-                    return (
-                      <div key={index} className="leaderboard-item">
-                        <span className="rank">#{index + 1}</span>
-                        <div className="king-info">
-                          <span className="address">
-                            {king.address || 'Unknown Address'}
-                          </span>
-                          <span className="time">
-                            {(king.timeOnThrone || 0)}s
-                          </span>
-                        </div>
+                  {topKings.map((king, index) => (
+                    <div key={index} className="leaderboard-item">
+                      <span className="rank">#{index + 1}</span>
+                      <div className="king-info">
+                        <span className="address">
+                          {king.nickname}
+                        </span>
+                        <span className="time">
+                          {(king.timeOnThrone || 0)}s
+                        </span>
                       </div>
-                    );
-                  })}
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <div className="no-data-message">{'>'} NO KINGS YET</div>
@@ -666,7 +693,11 @@ function App() {
                   onChange={(e) => setNewMessage(e.target.value)}
                   className="message-input"
                 />
-                <button onClick={sendMessage} className="send-message-button">
+                <button 
+                  onClick={sendMessage} 
+                  className="send-message-button"
+                  disabled={isLoadingMessages}
+                >
                   {'>'} SEND
                 </button>
               </div>
@@ -675,10 +706,10 @@ function App() {
               <div className="loading-message">{'>'} LOADING MESSAGES...</div>
             ) : messages.length > 0 ? (
               <div className="messages-list">
-                {messages.map((msg, index) => (
-                  <div key={index} className="message-item">
+                {messages.map((msg) => (
+                  <div key={msg.id} className="message-item">
                     <span className="message-sender">
-                      {msg.sender.slice(0, 6)}...{msg.sender.slice(-4)}
+                      {msg.sender}
                     </span>
                     <span className="message-content">{msg.content}</span>
                   </div>
@@ -691,15 +722,34 @@ function App() {
         )}
       </div>
 
-      {isConnected && window.ethereum && window.ethereum.chainId !== SEPOLIA_CHAIN_ID && (
+      {isConnected && window.ethereum && window.ethereum.chainId !== SAPPHIRE_CHAIN_ID && (
         <div className="network-warning">
           <p>{'>'} WRONG NETWORK DETECTED</p>
           <button 
             className="network-switch-button"
             onClick={checkAndSwitchNetwork}
           >
-            {'>'} SWITCH TO SEPOLIA
+            {'>'} SWITCH TO SAPPHIRE TESTNET
           </button>
+        </div>
+      )}
+
+      {showNicknameModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>{'>'} SET NICKNAME</h3>
+            <input
+              type="text"
+              placeholder="> ENTER NICKNAME"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              className="nickname-input"
+            />
+            <div className="modal-buttons">
+              <button onClick={setUserNicknameHandler}>{'>'} CONFIRM</button>
+              <button onClick={() => setShowNicknameModal(false)}>{'>'} CANCEL</button>
+            </div>
+          </div>
         </div>
       )}
     </div>
