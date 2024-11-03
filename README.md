@@ -1,6 +1,6 @@
 # King of the Hill DApp 
 
-A decentralized application (DApp) game running on Oasis Sapphire Testnet where players compete to become the king by placing higher bids. Features real-time updates, on-chain messaging, and nickname system.
+A decentralized application (DApp) game running on Oasis Sapphire Testnet where players compete to become the king by placing higher bids. Features real-time updates, on-chain messaging, and nickname system. Smart contracts in this repository https://github.com/looksg00d/smartcontracts_oasis
 
 ## Game Mechanics
 
@@ -36,14 +36,14 @@ A decentralized application (DApp) game running on Oasis Sapphire Testnet where 
 ## Local Development
 
 Clone the repo:
-git clone https://github.com/looksg00d/ocean_dapp.git
-cd ocean_dapp
+`git clone https://github.com/looksg00d/ocean_dapp.git`
+`cd ocean_dapp`
 
 Install dependencies:
-npm install
+`npm install`
 
 Start local development server:
-npm start
+`npm start`
 
 
 ## How to Play
