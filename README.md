@@ -1,87 +1,80 @@
-# Ocean DApp 🌊
+# King of the Hill DApp 👑
 
-A decentralized application for interacting with Ocean Protocol.
+A decentralized application (DApp) game running on Oasis Sapphire Testnet where players compete to become the king by placing higher bids. Features real-time updates, on-chain messaging, and nickname system.
 
-## 🚀 Quick Start
+## 🎮 Game Mechanics
 
-### Prerequisites
+- Bid higher than the current king to claim the throne
+- Stay king longer to earn more rewards
+- Previous king gets their bid back + rewards
+- Real-time leaderboard tracks longest-reigning kings
+- On-chain messaging system for player interaction
 
-- Node.js (version 14 or higher)
-- npm or yarn
-- MetaMask or other Web3 wallet
+## 🛠 Tech Stack
 
-### Installation
+- **Frontend:** React.js
+- **Smart Contracts:** Solidity
+- **Blockchain:** Oasis Sapphire Testnet
+- **Web3 Integration:** ethers.js
+- **Token Standard:** ERC20 (OCEAN Token)
 
-npm install @ethersproject/providers @ethersproject/contracts @ethersproject/units
-npm install @usedapp/core @chakra-ui/react --legacy-peer-deps
+## 🔧 Smart Contracts
 
-# Getting Started with Create React App
+- **Main Game Contract:** `0x255A17D141C19689fc5b2001E82DD9cBd99e8197`
+- **OCEAN Token:** `0x973e69303259B0c2543a38665122b773D28405fB`
+- **Nicknames Contract:** `0xd622248e7a4849082f1909665F421998c1b4d355`
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 🚀 Features
 
-## Available Scripts
+- **Wallet Integration:** MetaMask support
+- **Real-time Updates:** Auto-refresh every 10 seconds
+- **Leaderboard:** Top kings by time on throne
+- **Messaging System:** On-chain player communication
+- **Nickname System:** Custom player names
+- **Token Integration:** OCEAN token for bidding
 
-In the project directory, you can run:
+## 💻 Local Development
 
-### `npm start`
+Clone the repo:
+git clone https://github.com/looksg00d/ocean_dapp.git
+cd ocean_dapp
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Install dependencies:
+npm install
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Start local development server:
+npm start
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## How to Play
 
-### `npm run build`
+1. Connect MetaMask wallet
+2. Switch to Oasis Sapphire Testnet
+3. Get test OCEAN tokens
+4. Approve tokens for contract
+5. Place bid higher than current king
+6. Set nickname (optional)
+7. Send messages to other players
+   
+## Security
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Smart contracts deployed on secure testnet
+- Token approvals for exact bid amounts
+- Protected contract functions
+- Error handling for failed transactions
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Contributing
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Pull requests are welcome! For major changes, please open an issue first
 
-### `npm run eject`
+## 📄 License
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+MIT License - see LICENSE file for details
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Acknowledgments
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- Oasis Network team
+- OCEAN Protocol
+- OpenZeppelin for contract standards
+- React and ethers.js communities
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
